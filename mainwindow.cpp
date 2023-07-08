@@ -239,15 +239,21 @@ void MainWindow::on_buttonCalculate_clicked()
         tableWidget->setItem(i, 1, tableItem);
 
         tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i], 'f', 2));
+        tableItem->setTextAlignment(Qt::AlignRight);
         tableWidget->setItem(i, 2, tableItem);
 
         tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i], 'f', 2));
+        tableItem->setTextAlignment(Qt::AlignRight);
         tableWidget->setItem(i, 3, tableItem);
 
         tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1], 'f', 2));
+        tableItem->setTextAlignment(Qt::AlignRight);
         tableWidget->setItem(i, 4, tableItem);
     }
     tableWidget->resizeColumnsToContents();
     tableWidget->resizeRowsToContents();
+
+    tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 }
 
