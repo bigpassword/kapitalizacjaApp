@@ -111,9 +111,6 @@ QChartView* lineChartView{};
 QPieSeries* pieSeries{};
 QChart* pieChart{};
 QChartView* pieChartView{};
-// list
-QStringList* kapitalList{};
-QStringListModel* kapitalListModel{};
 
 void MainWindow::on_buttonCalculate_clicked()
 {
@@ -204,20 +201,39 @@ void MainWindow::on_buttonCalculate_clicked()
     ui->label_13->setText(QString::number(kapital->kapitalKoncowy, 10, 2));
     ui->label_14->setText(QString::number(kapital->kapitalKoncowy - kapital->kapitalPoczatkowy, 10, 2));
 
-    // generate list
-    delete kapitalList;
-    kapitalList = new QStringList;
+    // get table widget
+    QTableWidget* tableWidget = ui->tableWidget;
+    QTableWidgetItem* tableItem{};
 
-    QString tempLine;
-    for (int i=0; i<(kapital->liczbaKapitalizacji * kapital->czasTrwania); i++) {
-        tempLine = QString("%1. Kapitał: %2 + %3 = %4 PLN").arg(i+1).arg(kapital->kapitalInTime[i]).arg(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i]).arg(kapital->kapitalInTime[i+1]);
-        kapitalList->append(tempLine);
+    // check if table was used
+    if (tableWidget->item(0, 0)) {
+        // deallocate and clear items from table
+        for (int row=0; row<tableWidget->rowCount(); row++) {
+            for (int column=0; column<tableWidget->columnCount(); column++) {
+                tableItem = tableWidget->item(row, column);
+                delete tableItem;
+            }
+        }
+        tableWidget->clear();
     }
 
-    delete kapitalListModel;
-    kapitalListModel = new QStringListModel;
+    // generate table
+    QStringList tableHeaders;
+    tableHeaders << "Rok" << "Kapitał" << "Kapitalizacja";
 
-    kapitalListModel->setStringList(*kapitalList);
-    ui->listView->setModel(kapitalListModel);
+    tableWidget->setColumnCount(tableHeaders.size());
+    tableWidget->setHorizontalHeaderLabels(tableHeaders);
+
+    int rowCount = kapital->liczbaKapitalizacji * kapital->czasTrwania;
+    tableWidget->setRowCount(rowCount);
+    for (int i=0; i<rowCount; i++) {
+        tableItem = new QTableWidgetItem(QString::number(i / kapital->liczbaKapitalizacji + 1));
+        tableWidget->setItem(i, 0, tableItem);
+        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i]));
+        tableWidget->setItem(i, 1, tableItem);
+        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i]));
+        tableWidget->setItem(i, 2, tableItem);
+    }
+
 }
 
