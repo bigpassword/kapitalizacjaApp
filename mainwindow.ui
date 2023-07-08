@@ -64,35 +64,19 @@
            <property name="bottomMargin">
             <number>10</number>
            </property>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_3">
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_7">
              <property name="text">
-              <string>Okres trwania</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              <string>lat</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Liczba kapitalizacji</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="lineEdit_2">
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="lineEdit_1">
              <property name="text">
               <string/>
              </property>
             </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="spinBox_1"/>
            </item>
            <item row="3" column="2">
             <widget class="QLabel" name="label_8">
@@ -101,11 +85,68 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>PLN</string>
-             </property>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBoxMonths">
+             <item>
+              <property name="text">
+               <string>Styczeń</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Luty</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Marzec</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Kwiecień</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Maj</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Czerwiec</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Lipiec</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Sierpień</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Wrzesień</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Październik</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Listopad</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Grudzeiń</string>
+              </property>
+             </item>
             </widget>
            </item>
            <item row="0" column="0">
@@ -118,17 +159,20 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="lineEdit_1">
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_3">
              <property name="text">
-              <string/>
+              <string>Okres trwania</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="label_6">
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>/ rok</string>
+              <string>PLN</string>
              </property>
             </widget>
            </item>
@@ -145,10 +189,30 @@
            <item row="2" column="1">
             <widget class="QSpinBox" name="spinBox_2"/>
            </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="label_7">
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="lineEdit_2">
              <property name="text">
-              <string>lat</string>
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Liczba kapitalizacji</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="spinBox_1"/>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>/ rok</string>
              </property>
             </widget>
            </item>
@@ -156,6 +220,16 @@
             <widget class="QPushButton" name="buttonCalculate">
              <property name="text">
               <string>Oblicz</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_18">
+             <property name="text">
+              <string>Pierwszy miesiąc</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
@@ -343,7 +417,14 @@
         </layout>
        </item>
        <item>
-        <widget class="QTableWidget" name="tableWidget"/>
+        <widget class="QTableWidget" name="tableWidget">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

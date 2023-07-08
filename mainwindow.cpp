@@ -32,6 +32,8 @@ typedef struct Kapital {
     std::vector<double> kapitalInTime;
 } Kapital;
 
+QString months[] = {"Styczneń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"};
+
 void kapitalizacjaOdsetek(Kapital* kapital);
 
 MainWindow::MainWindow(QWidget *parent)
@@ -201,6 +203,8 @@ void MainWindow::on_buttonCalculate_clicked()
     ui->label_13->setText(QString::number(kapital->kapitalKoncowy, 10, 2));
     ui->label_14->setText(QString::number(kapital->kapitalKoncowy - kapital->kapitalPoczatkowy, 10, 2));
 
+
+    // table of each step
     // get table widget
     QTableWidget* tableWidget = ui->tableWidget;
     QTableWidgetItem* tableItem{};
@@ -219,7 +223,7 @@ void MainWindow::on_buttonCalculate_clicked()
 
     // generate table
     QStringList tableHeaders;
-    tableHeaders << "Rok" << "Kapitał" << "Kapitalizacja";
+    tableHeaders << "Rok" << "Miesiąc" << "Kapitał" << "Kapitalizacja" << "Suma";
 
     tableWidget->setColumnCount(tableHeaders.size());
     tableWidget->setHorizontalHeaderLabels(tableHeaders);
@@ -228,12 +232,22 @@ void MainWindow::on_buttonCalculate_clicked()
     tableWidget->setRowCount(rowCount);
     for (int i=0; i<rowCount; i++) {
         tableItem = new QTableWidgetItem(QString::number(i / kapital->liczbaKapitalizacji + 1));
+        tableItem->setTextAlignment(Qt::AlignCenter);
         tableWidget->setItem(i, 0, tableItem);
-        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i]));
-        tableWidget->setItem(i, 1, tableItem);
-        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i]));
-        tableWidget->setItem(i, 2, tableItem);
-    }
 
+        tableItem = new QTableWidgetItem(months[((i % kapital->liczbaKapitalizacji) * 12/kapital->liczbaKapitalizacji + ui->comboBoxMonths->currentIndex()) % 12]);
+        tableWidget->setItem(i, 1, tableItem);
+
+        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i], 'f', 2));
+        tableWidget->setItem(i, 2, tableItem);
+
+        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i], 'f', 2));
+        tableWidget->setItem(i, 3, tableItem);
+
+        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1], 'f', 2));
+        tableWidget->setItem(i, 4, tableItem);
+    }
+    tableWidget->resizeColumnsToContents();
+    tableWidget->resizeRowsToContents();
 }
 
