@@ -253,6 +253,12 @@ void MainWindow::on_buttonCalculate_clicked()
     tableWidget->resizeColumnsToContents();
     tableWidget->resizeRowsToContents();
 
+    for (int i=2; i<5; i++) {
+        if (tableWidget->columnWidth(i)<85) {
+            tableWidget->setColumnWidth(i, 85);
+        }
+    }
+
     tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 }
