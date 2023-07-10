@@ -21,15 +21,19 @@
 #include <QStringListModel>
 
 typedef struct Kapital {
-    double kapitalPoczatkowy;
+    const double podatek = 0.1; /* 10% */
 
-    double kapitalKoncowy;
+    double kapitalPoczatkowy;
     int liczbaKapitalizacji;
     int czasTrwania;
+
+    double kapitalKoncowy;
+    double podatekKoncowy = 0;
 
     double stopaProcentowa;
 
     std::vector<double> kapitalInTime;
+    std::vector<double> podatekInTime;
 } Kapital;
 
 QString months[] = {"Styczneń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"};
@@ -42,9 +46,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // disable resize
-    //setWindowFlag(Qt::MSWindowsFixedSizeDialogHint, true);
-
     // setup lineEdit validators
     //QIntValidator *intValidator = new QIntValidator(1, 999999999, this);
     QDoubleValidator *doubleValidator = new QDoubleValidator(0.01, 999999999, 2, this);
@@ -52,8 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
     doubleValidator->setNotation(QDoubleValidator::StandardNotation);
     percentValidator->setNotation(QDoubleValidator::StandardNotation);
 
-    ui->lineEdit_1->setValidator(doubleValidator);
-    ui->lineEdit_2->setValidator(percentValidator);
+    ui->lineEdit_kapitalPocz->setValidator(doubleValidator);
+    ui->lineEdit_stopaProc->setValidator(percentValidator);
 }
 
 MainWindow::~MainWindow()
@@ -63,12 +64,18 @@ MainWindow::~MainWindow()
 
 void kapitalizacjaOdsetek(Kapital* kapital) {
     int iloscKapitalizacji = kapital->liczbaKapitalizacji * kapital->czasTrwania;
-    double tempKapital, stopaOkresu = 1+(kapital->stopaProcentowa / kapital->liczbaKapitalizacji);
+    double tempKapital, tempPodatek, stopaOkresu = 1+(kapital->stopaProcentowa / kapital->liczbaKapitalizacji);
 
     kapital->kapitalInTime.push_back(kapital->kapitalPoczatkowy);
+    kapital->podatekInTime.push_back(0);
     for (int i=0; i<iloscKapitalizacji; i++) {
-        tempKapital = kapital->kapitalPoczatkowy * std::pow(stopaOkresu, i+1);
+        tempKapital = kapital->kapitalInTime[i] * stopaOkresu;
+        tempPodatek = (tempKapital - kapital->kapitalInTime[i]) * kapital->podatek;
+        tempKapital -= tempPodatek;
+
         kapital->kapitalInTime.push_back(tempKapital);
+        kapital->podatekInTime.push_back(tempPodatek);
+        kapital->podatekKoncowy += tempPodatek;
     }
 
     //kapital->kapitalKoncowy = kapital->kapitalPoczatkowy * std::pow(stopaOkresu, iloscKapitalizacji);
@@ -117,7 +124,7 @@ QChartView* pieChartView{};
 void MainWindow::on_buttonCalculate_clicked()
 {
     // check if any input has 0
-    if (!ui->lineEdit_1->text().toDouble() + !ui->spinBox_1->value() + !ui->spinBox_2->value() + !ui->lineEdit_2->text().toDouble()) {
+    if (!ui->lineEdit_kapitalPocz->text().toDouble() + !ui->spinBox_liczbaKap->value() + !ui->spinBox_okresTrwania->value() + !ui->lineEdit_stopaProc->text().toDouble()) {
         return;
     }
 
@@ -125,10 +132,10 @@ void MainWindow::on_buttonCalculate_clicked()
     kapital = new Kapital;
 
     // get data from user
-    kapital->kapitalPoczatkowy = ui->lineEdit_1->text().toDouble();
-    kapital->liczbaKapitalizacji = ui->spinBox_1->value();
-    kapital->czasTrwania = ui->spinBox_2->value();
-    kapital->stopaProcentowa = ui->lineEdit_2->text().toDouble()/100;
+    kapital->kapitalPoczatkowy = ui->lineEdit_kapitalPocz->text().toDouble();
+    kapital->liczbaKapitalizacji = ui->spinBox_liczbaKap->value();
+    kapital->czasTrwania = ui->spinBox_okresTrwania->value();
+    kapital->stopaProcentowa = ui->lineEdit_stopaProc->text().toDouble()/100;
 
     kapitalizacjaOdsetek(kapital);
 
@@ -170,6 +177,7 @@ void MainWindow::on_buttonCalculate_clicked()
         pieSeries = new QPieSeries;
         pieSeries->append("Kapitał początkowy", kapital->kapitalPoczatkowy);
         pieSeries->append("Różnica", kapital->kapitalKoncowy - kapital->kapitalPoczatkowy);
+        pieSeries->append("Podatek", kapital->podatekKoncowy);
 
         // make the hole
         pieSeries->setHoleSize(0.4);
@@ -177,7 +185,7 @@ void MainWindow::on_buttonCalculate_clicked()
 
         pieChart = new QChart;
         pieChart->addSeries(pieSeries);
-        pieChart->legend()->hide();
+        //pieChart->legend()->hide();
         pieChart->setAnimationOptions(QChart::AllAnimations);
 
         // remove margins
@@ -199,9 +207,10 @@ void MainWindow::on_buttonCalculate_clicked()
     }
 
     // display capital change next to donut
-    ui->label_12->setText(QString::number(kapital->kapitalPoczatkowy, 10, 2));
-    ui->label_13->setText(QString::number(kapital->kapitalKoncowy, 10, 2));
-    ui->label_14->setText(QString::number(kapital->kapitalKoncowy - kapital->kapitalPoczatkowy, 10, 2));
+    ui->label_kapitalPocz->setText(QString::number(kapital->kapitalPoczatkowy, 'f', 2));
+    ui->label_kapitalKon->setText(QString::number(kapital->kapitalKoncowy, 'f', 2));
+    ui->label_kapitalRoz->setText(QString::number(kapital->kapitalKoncowy - kapital->kapitalPoczatkowy, 'f', 2));
+    ui->label_kapitalPodatek->setText(QString::number(kapital->podatekKoncowy, 'f', 2));
 
 
     // table of each step
@@ -223,7 +232,7 @@ void MainWindow::on_buttonCalculate_clicked()
 
     // generate table
     QStringList tableHeaders;
-    tableHeaders << "Rok" << "Miesiąc" << "Kapitał" << "Kapitalizacja" << "Suma";
+    tableHeaders << "Rok" << "Miesiąc" << "Kapitał" << "Kapitalizacja" << "Podatek" << "Opodatkowane" << "Suma";
 
     tableWidget->setColumnCount(tableHeaders.size());
     tableWidget->setHorizontalHeaderLabels(tableHeaders);
@@ -242,20 +251,29 @@ void MainWindow::on_buttonCalculate_clicked()
         tableItem->setTextAlignment(Qt::AlignRight);
         tableWidget->setItem(i, 2, tableItem);
 
-        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i], 'f', 2));
+        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i] + kapital->podatekInTime[i+1], 'f', 2));
         tableItem->setTextAlignment(Qt::AlignRight);
         tableWidget->setItem(i, 3, tableItem);
 
-        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1], 'f', 2));
+        tableItem = new QTableWidgetItem(QString::number(kapital->podatekInTime[i+1], 'f', 2));
         tableItem->setTextAlignment(Qt::AlignRight);
         tableWidget->setItem(i, 4, tableItem);
+
+        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i], 'f', 2));
+        tableItem->setTextAlignment(Qt::AlignRight);
+        tableWidget->setItem(i, 5, tableItem);
+
+        tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1], 'f', 2));
+        tableItem->setTextAlignment(Qt::AlignRight);
+        tableWidget->setItem(i, 6, tableItem);
     }
     tableWidget->resizeColumnsToContents();
     tableWidget->resizeRowsToContents();
 
-    for (int i=2; i<5; i++) {
-        if (tableWidget->columnWidth(i)<85) {
-            tableWidget->setColumnWidth(i, 85);
+    // set minimum width for columns 3..5
+    for (int i=2; i<7; i++) {
+        if (tableWidget->columnWidth(i)<71) {
+            tableWidget->setColumnWidth(i, 71);
         }
     }
 
