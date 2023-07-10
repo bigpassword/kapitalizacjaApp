@@ -186,6 +186,7 @@ void MainWindow::on_buttonCalculate_clicked()
         pieChart = new QChart;
         pieChart->addSeries(pieSeries);
         //pieChart->legend()->hide();
+        pieChart->legend()->setAlignment(Qt::AlignLeft);
         pieChart->setAnimationOptions(QChart::AllAnimations);
 
         // remove margins
