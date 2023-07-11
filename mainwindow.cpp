@@ -205,6 +205,7 @@ void MainWindow::on_buttonCalculate_clicked()
 
         pieSeries->append("Kapitał początkowy", kapital->kapitalPoczatkowy);
         pieSeries->append("Różnica", kapital->kapitalKoncowy - kapital->kapitalPoczatkowy);
+        pieSeries->append("Podatek", kapital->podatekKoncowy);
     }
 
     // display capital change next to donut
