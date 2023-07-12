@@ -82,7 +82,7 @@ void kapitalizacjaOdsetek(Kapital* kapital) {
     kapital->kapitalKoncowy = kapital->kapitalInTime.back();
 }
 
-void MainWindow::on_spinBox_2_valueChanged(int arg1)
+void MainWindow::on_spinBox_okresTrwania_valueChanged(int arg1)
 {
     QLabel* yearLabel = ui->label_7;
 

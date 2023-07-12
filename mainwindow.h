@@ -20,7 +20,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_spinBox_2_valueChanged(int arg1);
+    void on_spinBox_okresTrwania_valueChanged(int arg1);
 
     void on_buttonCalculate_clicked();
 
