@@ -24,8 +24,9 @@ typedef struct Kapital {
     const double podatek = 0.1; /* 10% */
 
     double kapitalPoczatkowy;
-    int liczbaKapitalizacji;
+    bool okresMiesiace;
     int czasTrwania;
+    int liczbaKapitalizacji;
 
     double kapitalKoncowy;
     double podatekKoncowy = 0;
@@ -67,6 +68,9 @@ MainWindow::~MainWindow()
 void kapitalizacjaOdsetek(Kapital* kapital) {
     int iloscKapitalizacji = kapital->liczbaKapitalizacji * kapital->czasTrwania;
     double tempKapital, tempPodatek, stopaOkresu = 1+(kapital->stopaProcentowa / kapital->liczbaKapitalizacji);
+    if (kapital->okresMiesiace) {
+        stopaOkresu = ((stopaOkresu - 1) / 12) + 1;
+    }
 
     kapital->kapitalInTime.push_back(kapital->kapitalPoczatkowy);
     kapital->podatekInTime.push_back(0);
@@ -86,26 +90,30 @@ void kapitalizacjaOdsetek(Kapital* kapital) {
 
 void MainWindow::on_spinBox_okresTrwania_valueChanged(int arg1)
 {
-    QLabel* yearLabel = ui->label_7;
+    QComboBox* periodBox = ui->comboBoxPeriod;
 
     switch (arg1) {
     case 1:
-        yearLabel->setText("rok");
+        periodBox->setItemText(0, "rok");
+        periodBox->setItemText(1, "miesiąc");
         break;
     case 12:
     case 13:
     case 14:
-        yearLabel->setText("lat");
+        periodBox->setItemText(0, "lat");
+        periodBox->setItemText(1, "miesięcy");
         break;
     default:
         switch (arg1 % 10) {
         case 2:
         case 3:
         case 4:
-            yearLabel->setText("lata");
+            periodBox->setItemText(0, "lata");
+            periodBox->setItemText(1, "miesiące");
             break;
         default:
-            yearLabel->setText("lat");
+            periodBox->setItemText(0, "lat");
+            periodBox->setItemText(1, "miesięcy");
             break;
         }
         break;
@@ -137,8 +145,9 @@ void MainWindow::on_buttonCalculate_clicked()
 
     // get data from user
     kapital->kapitalPoczatkowy = locale.toDouble(ui->lineEdit_kapitalPocz->text());
-    kapital->liczbaKapitalizacji = ui->spinBox_liczbaKap->value();
+    kapital->okresMiesiace = ui->comboBoxPeriod->currentIndex();
     kapital->czasTrwania = ui->spinBox_okresTrwania->value();
+    kapital->liczbaKapitalizacji = ui->spinBox_liczbaKap->value();
     kapital->stopaProcentowa = locale.toDouble(ui->lineEdit_stopaProc->text())/100;
 
     kapitalizacjaOdsetek(kapital);
@@ -238,7 +247,11 @@ void MainWindow::on_buttonCalculate_clicked()
 
     // generate table
     QStringList tableHeaders;
-    tableHeaders << "Rok" << "Miesiąc" << "Kapitał" << "Kapitalizacja" << "Podatek" << "Opodatkowane" << "Suma";
+    if (kapital->okresMiesiace) {
+        tableHeaders << "Miesiąc" << "Kapitał" << "Kapitalizacja" << "Podatek" << "Opodatkowane" << "Suma";
+    } else {
+        tableHeaders << "Rok" << "Miesiąc" << "Kapitał" << "Kapitalizacja" << "Podatek" << "Opodatkowane" << "Suma";
+    }
 
     tableWidget->setColumnCount(tableHeaders.size());
     tableWidget->setHorizontalHeaderLabels(tableHeaders);
@@ -246,32 +259,42 @@ void MainWindow::on_buttonCalculate_clicked()
     int rowCount = kapital->liczbaKapitalizacji * kapital->czasTrwania;
     tableWidget->setRowCount(rowCount);
     for (int i=0; i<rowCount; i++) {
+        int j = 0;
+
         tableItem = new QTableWidgetItem(QString::number(i / kapital->liczbaKapitalizacji + 1));
         tableItem->setTextAlignment(Qt::AlignCenter);
-        tableWidget->setItem(i, 0, tableItem);
+        tableWidget->setItem(i, j, tableItem);
+        j++;
 
-        tableItem = new QTableWidgetItem(months[((i % kapital->liczbaKapitalizacji) * 12/kapital->liczbaKapitalizacji + ui->comboBoxMonths->currentIndex()) % 12]);
-        tableWidget->setItem(i, 1, tableItem);
+        if (!kapital->okresMiesiace) {
+            tableItem = new QTableWidgetItem(months[((i % kapital->liczbaKapitalizacji) * 12/kapital->liczbaKapitalizacji + ui->comboBoxMonths->currentIndex()) % 12]);
+            tableWidget->setItem(i, j, tableItem);
+            j++;
+        }
 
         tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i], 'f', 2));
         tableItem->setTextAlignment(Qt::AlignRight);
-        tableWidget->setItem(i, 2, tableItem);
+        tableWidget->setItem(i, j, tableItem);
+        j++;
 
         tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i] + kapital->podatekInTime[i+1], 'f', 2));
         tableItem->setTextAlignment(Qt::AlignRight);
-        tableWidget->setItem(i, 3, tableItem);
+        tableWidget->setItem(i, j, tableItem);
+        j++;
 
         tableItem = new QTableWidgetItem(QString::number(kapital->podatekInTime[i+1], 'f', 2));
         tableItem->setTextAlignment(Qt::AlignRight);
-        tableWidget->setItem(i, 4, tableItem);
+        tableWidget->setItem(i, j, tableItem);
+        j++;
 
         tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1] - kapital->kapitalInTime[i], 'f', 2));
         tableItem->setTextAlignment(Qt::AlignRight);
-        tableWidget->setItem(i, 5, tableItem);
+        tableWidget->setItem(i, j, tableItem);
+        j++;
 
         tableItem = new QTableWidgetItem(QString::number(kapital->kapitalInTime[i+1], 'f', 2));
         tableItem->setTextAlignment(Qt::AlignRight);
-        tableWidget->setItem(i, 6, tableItem);
+        tableWidget->setItem(i, j, tableItem);
     }
     tableWidget->resizeColumnsToContents();
     tableWidget->resizeRowsToContents();
@@ -285,5 +308,20 @@ void MainWindow::on_buttonCalculate_clicked()
 
     tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     tableWidget->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+}
+
+
+void MainWindow::on_comboBoxPeriod_currentIndexChanged(int index)
+{
+    QComboBox* monthBox = ui->comboBoxMonths;
+    QLabel* capLabel = ui->label_liczbaKap;
+
+    if (index) {
+        monthBox->setEnabled(false);
+        capLabel->setText("/ miesiąc");
+    } else {
+        monthBox->setEnabled(true);
+        capLabel->setText("/ rok");
+    }
 }
 

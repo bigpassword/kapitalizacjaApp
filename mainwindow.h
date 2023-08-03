@@ -24,6 +24,8 @@ private slots:
 
     void on_buttonCalculate_clicked();
 
+    void on_comboBoxPeriod_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
 };
