@@ -298,7 +298,7 @@
           </widget>
          </item>
          <item>
-          <layout class="QGridLayout" name="gridLayout_4" columnstretch="3,1,2,3,1,2,0">
+          <layout class="QGridLayout" name="gridLayout_4" columnstretch="3,1,2,3,1,2">
            <property name="leftMargin">
             <number>9</number>
            </property>
@@ -334,7 +334,7 @@
            <item row="2" column="0">
             <widget class="QLabel" name="label_11">
              <property name="text">
-              <string>Różnica</string>
+              <string>Zysk</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

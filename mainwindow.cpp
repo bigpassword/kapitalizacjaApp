@@ -46,8 +46,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // change locale
+    QLocale::setDefault(QLocale("pl_PL"));
+
     // setup lineEdit validators
-    //QIntValidator *intValidator = new QIntValidator(1, 999999999, this);
     QDoubleValidator *doubleValidator = new QDoubleValidator(0.01, 999999999, 2, this);
     QDoubleValidator *percentValidator = new QDoubleValidator(0.0001, 999999999, 4, this);
     doubleValidator->setNotation(QDoubleValidator::StandardNotation);
@@ -123,8 +125,10 @@ QChartView* pieChartView{};
 
 void MainWindow::on_buttonCalculate_clicked()
 {
+    QLocale locale = QLocale("pl_PL");
+
     // check if any input has 0
-    if (!ui->lineEdit_kapitalPocz->text().toDouble() + !ui->spinBox_liczbaKap->value() + !ui->spinBox_okresTrwania->value() + !ui->lineEdit_stopaProc->text().toDouble()) {
+    if (!locale.toDouble(ui->lineEdit_kapitalPocz->text()) + !ui->spinBox_liczbaKap->value() + !ui->spinBox_okresTrwania->value() + !locale.toDouble(ui->lineEdit_stopaProc->text())) {
         return;
     }
 
@@ -132,10 +136,10 @@ void MainWindow::on_buttonCalculate_clicked()
     kapital = new Kapital;
 
     // get data from user
-    kapital->kapitalPoczatkowy = ui->lineEdit_kapitalPocz->text().toDouble();
+    kapital->kapitalPoczatkowy = locale.toDouble(ui->lineEdit_kapitalPocz->text());
     kapital->liczbaKapitalizacji = ui->spinBox_liczbaKap->value();
     kapital->czasTrwania = ui->spinBox_okresTrwania->value();
-    kapital->stopaProcentowa = ui->lineEdit_stopaProc->text().toDouble()/100;
+    kapital->stopaProcentowa = locale.toDouble(ui->lineEdit_stopaProc->text())/100;
 
     kapitalizacjaOdsetek(kapital);
 
@@ -176,7 +180,7 @@ void MainWindow::on_buttonCalculate_clicked()
     if (!pieChartView) {
         pieSeries = new QPieSeries;
         pieSeries->append("Kapitał początkowy", kapital->kapitalPoczatkowy);
-        pieSeries->append("Różnica", kapital->kapitalKoncowy - kapital->kapitalPoczatkowy);
+        pieSeries->append("Zysk", kapital->kapitalKoncowy - kapital->kapitalPoczatkowy);
         pieSeries->append("Podatek", kapital->podatekKoncowy);
 
         // make the hole
@@ -204,7 +208,7 @@ void MainWindow::on_buttonCalculate_clicked()
         pieSeries->clear();
 
         pieSeries->append("Kapitał początkowy", kapital->kapitalPoczatkowy);
-        pieSeries->append("Różnica", kapital->kapitalKoncowy - kapital->kapitalPoczatkowy);
+        pieSeries->append("Zysk", kapital->kapitalKoncowy - kapital->kapitalPoczatkowy);
         pieSeries->append("Podatek", kapital->podatekKoncowy);
     }
 
