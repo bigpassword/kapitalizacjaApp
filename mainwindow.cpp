@@ -2,18 +2,17 @@
 #include "ui_mainwindow.h"
 
 #include <cmath>
-#include <vector>
 
 #include <QIntValidator>
 #include <QDoubleValidator>
 
 #include <QtCharts>
-#include <QLineSeries>
-#include <QChart>
-#include <QChartView>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_grid.h>
+#include <qwt_symbol.h>
 #include <QPieSeries>
 #include <QPieSlice>
-#include <QFrame>
 #include <QFrame>
 
 #include <QListView>
@@ -28,16 +27,21 @@ typedef struct Kapital {
     int czasTrwania;
     int liczbaKapitalizacji;
 
+    int iloscKapitalizacji;
+
     double kapitalKoncowy;
     double podatekKoncowy = 0;
 
     double stopaProcentowa;
 
-    std::vector<double> kapitalInTime;
-    std::vector<double> podatekInTime;
+    QVector<double> kapitalInTime;
+    QVector<double> podatekInTime;
 } Kapital;
 
-QString months[] = {"Styczneń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"};
+const QColor blue1("#6abfea");
+const QColor blue2("#1879aa");
+
+const QString months[] = {"Styczneń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"};
 
 void kapitalizacjaOdsetek(Kapital* kapital);
 
@@ -66,21 +70,21 @@ MainWindow::~MainWindow()
 }
 
 void kapitalizacjaOdsetek(Kapital* kapital) {
-    int iloscKapitalizacji = kapital->liczbaKapitalizacji * kapital->czasTrwania;
+    kapital->iloscKapitalizacji = kapital->liczbaKapitalizacji * kapital->czasTrwania;
     double tempKapital, tempPodatek, stopaOkresu = 1+(kapital->stopaProcentowa / kapital->liczbaKapitalizacji);
     if (kapital->okresMiesiace) {
         stopaOkresu = ((stopaOkresu - 1) / 12) + 1;
     }
 
-    kapital->kapitalInTime.push_back(kapital->kapitalPoczatkowy);
-    kapital->podatekInTime.push_back(0);
-    for (int i=0; i<iloscKapitalizacji; i++) {
+    kapital->kapitalInTime.append(kapital->kapitalPoczatkowy);
+    kapital->podatekInTime.append(0);
+    for (int i=0; i<kapital->iloscKapitalizacji; i++) {
         tempKapital = kapital->kapitalInTime[i] * stopaOkresu;
         tempPodatek = (tempKapital - kapital->kapitalInTime[i]) * kapital->podatek;
         tempKapital -= tempPodatek;
 
-        kapital->kapitalInTime.push_back(tempKapital);
-        kapital->podatekInTime.push_back(tempPodatek);
+        kapital->kapitalInTime.append(tempKapital);
+        kapital->podatekInTime.append(tempPodatek);
         kapital->podatekKoncowy += tempPodatek;
     }
 
@@ -122,10 +126,9 @@ void MainWindow::on_spinBox_okresTrwania_valueChanged(int arg1)
 
 // === global variables for kapital ===
 Kapital* kapital{};
-// chart
-QLineSeries* lineSeries{};
-QChart* lineChart{};
-QChartView* lineChartView{};
+// plot
+QwtPlot* linePlot{};
+QwtPlotCurve* linePlotCurve{};
 // pie
 QPieSeries* pieSeries{};
 QChart* pieChart{};
@@ -153,36 +156,41 @@ void MainWindow::on_buttonCalculate_clicked()
     kapitalizacjaOdsetek(kapital);
 
     // graph the data from the function
-    delete lineSeries;
-    lineSeries = new QLineSeries();
+    QVector<QPointF> lineSeries;
 
-    for (int i=0; i<(kapital->liczbaKapitalizacji * kapital->czasTrwania + 1); i++) {
-        lineSeries->append(i, kapital->kapitalInTime[i]);
+    for (int i=0; i<kapital->iloscKapitalizacji+1; i++) {
+        double x = (double)i / kapital->liczbaKapitalizacji;
+        lineSeries.append(QPointF(x, kapital->kapitalInTime[i]));
     }
 
-    delete lineChart;
-    lineChart = new QChart();
+    QFrame* linePlotFrame = ui->linePlotView;
 
-    lineChart->addSeries(lineSeries);
-    lineChart->legend()->hide();
-    lineChart->createDefaultAxes();
-    lineChart->setAnimationOptions(QChart::AllAnimations);
+    if (!linePlot) {
+        linePlot = new QwtPlot(linePlotFrame);
+        linePlot->setAxisTitle(QwtPlot::xBottom, "Czas");
+        linePlot->setAxisTitle(QwtPlot::yLeft, "Kapitał");
 
-    // remove margins
-    lineChart->layout()->setContentsMargins(0, 0, 0, 0);
-    lineChart->setBackgroundVisible(false);
+        linePlotFrame->layout()->addWidget(linePlot);
 
-    delete lineChartView;
-    lineChartView = new QChartView(lineChart);
-    lineChartView->setRenderHint(QPainter::Antialiasing);
+        QwtPlotGrid* linePlotGrid = new QwtPlotGrid();
+        linePlotGrid->setPen(Qt::lightGray, 1);
+        linePlotGrid->attach(linePlot);
 
-    // display in line chart view
-    QLayout* lineChartLayout = ui->lineChartView->layout();
+        linePlotCurve = new QwtPlotCurve;
 
-    if (!lineChartLayout->isEmpty()) {
-        lineChartLayout->removeWidget(lineChartLayout->takeAt(0)->widget());
+        linePlotCurve->setPen(blue1, 2, Qt::DashLine);
+        linePlotCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
+
+        QwtSymbol* symbol = new QwtSymbol(QwtSymbol::Ellipse, QBrush(blue2), QPen(Qt::transparent), QSize(5, 5));
+        linePlotCurve->setSymbol(symbol);
+        linePlotCurve->setStyle(QwtPlotCurve::Lines);
+
+        linePlotCurve->setSamples(lineSeries);
+        linePlotCurve->attach(linePlot);
+    } else {
+        linePlotCurve->setSamples(lineSeries);
+        linePlot->replot();
     }
-    lineChartLayout->addWidget(lineChartView);
 
     // pie chart of profits
     // check if pie chart exists, if not create one
@@ -256,9 +264,8 @@ void MainWindow::on_buttonCalculate_clicked()
     tableWidget->setColumnCount(tableHeaders.size());
     tableWidget->setHorizontalHeaderLabels(tableHeaders);
 
-    int rowCount = kapital->liczbaKapitalizacji * kapital->czasTrwania;
-    tableWidget->setRowCount(rowCount);
-    for (int i=0; i<rowCount; i++) {
+    tableWidget->setRowCount(kapital->iloscKapitalizacji);
+    for (int i=0; i<kapital->iloscKapitalizacji; i++) {
         int j = 0;
 
         tableItem = new QTableWidgetItem(QString::number(i / kapital->liczbaKapitalizacji + 1));

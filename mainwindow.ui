@@ -246,7 +246,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QFrame" name="lineChartView">
+       <widget class="QFrame" name="linePlotView">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -458,10 +458,13 @@
  </widget>
  <tabstops>
   <tabstop>lineEdit_kapitalPocz</tabstop>
-  <tabstop>spinBox_liczbaKap</tabstop>
   <tabstop>spinBox_okresTrwania</tabstop>
+  <tabstop>comboBoxPeriod</tabstop>
+  <tabstop>spinBox_liczbaKap</tabstop>
   <tabstop>lineEdit_stopaProc</tabstop>
+  <tabstop>comboBoxMonths</tabstop>
   <tabstop>buttonCalculate</tabstop>
+  <tabstop>tableWidget</tabstop>
  </tabstops>
  <resources/>
  <connections/>
