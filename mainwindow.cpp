@@ -191,6 +191,7 @@ void MainWindow::on_buttonCalculate_clicked()
         linePlotCurve->setSamples(lineSeries);
         linePlot->replot();
     }
+    linePlot->setAxisScale(QwtPlot::xBottom, 0, kapital->liczbaKapitalizacji, 1);
 
     // pie chart of profits
     // check if pie chart exists, if not create one

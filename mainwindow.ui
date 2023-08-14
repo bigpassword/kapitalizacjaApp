@@ -459,10 +459,10 @@
  <tabstops>
   <tabstop>lineEdit_kapitalPocz</tabstop>
   <tabstop>spinBox_okresTrwania</tabstop>
-  <tabstop>comboBoxPeriod</tabstop>
   <tabstop>spinBox_liczbaKap</tabstop>
   <tabstop>lineEdit_stopaProc</tabstop>
   <tabstop>comboBoxMonths</tabstop>
+  <tabstop>comboBoxPeriod</tabstop>
   <tabstop>buttonCalculate</tabstop>
   <tabstop>tableWidget</tabstop>
  </tabstops>
