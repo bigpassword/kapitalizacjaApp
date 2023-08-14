@@ -64,35 +64,12 @@
            <property name="bottomMargin">
             <number>10</number>
            </property>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Okres trwania</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Liczba kapitalizacji</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="lineEdit_2">
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="lineEdit_kapitalPocz">
              <property name="text">
               <string/>
              </property>
             </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="spinBox_1"/>
            </item>
            <item row="3" column="2">
             <widget class="QLabel" name="label_8">
@@ -101,11 +78,68 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>PLN</string>
-             </property>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="comboBoxMonths">
+             <item>
+              <property name="text">
+               <string>Styczeń</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Luty</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Marzec</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Kwiecień</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Maj</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Czerwiec</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Lipiec</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Sierpień</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Wrzesień</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Październik</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Listopad</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Grudzeiń</string>
+              </property>
+             </item>
             </widget>
            </item>
            <item row="0" column="0">
@@ -118,17 +152,20 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLineEdit" name="lineEdit_1">
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_3">
              <property name="text">
-              <string/>
+              <string>Okres trwania</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="label_6">
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>/ rok</string>
+              <string>PLN</string>
              </property>
             </widget>
            </item>
@@ -142,13 +179,33 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="spinBox_okresTrwania"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="lineEdit_stopaProc">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Liczba kapitalizacji</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="1">
-            <widget class="QSpinBox" name="spinBox_2"/>
+            <widget class="QSpinBox" name="spinBox_liczbaKap"/>
            </item>
            <item row="2" column="2">
-            <widget class="QLabel" name="label_7">
+            <widget class="QLabel" name="label_liczbaKap">
              <property name="text">
-              <string>lat</string>
+              <string>/ rok</string>
              </property>
             </widget>
            </item>
@@ -159,13 +216,37 @@
              </property>
             </widget>
            </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_18">
+             <property name="text">
+              <string>Pierwszy miesiąc</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QComboBox" name="comboBoxPeriod">
+             <item>
+              <property name="text">
+               <string>lat</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>miesięcy</string>
+              </property>
+             </item>
+            </widget>
+           </item>
           </layout>
          </item>
         </layout>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QFrame" name="lineChartView">
+       <widget class="QFrame" name="linePlotView">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -202,130 +283,13 @@
         <number>4</number>
        </property>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_1" stretch="3,4">
-         <item>
-          <layout class="QGridLayout" name="gridLayout_4" rowstretch="2,1,1,1,4" rowminimumheight="1,1,1,0,0">
-           <item row="2" column="2">
-            <widget class="QLabel" name="label_16">
-             <property name="text">
-              <string>PLN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QLabel" name="label_14">
-             <property name="text">
-              <string>0</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_11">
-             <property name="text">
-              <string>Różnica</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="label_15">
-             <property name="text">
-              <string>PLN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="label_17">
-             <property name="text">
-              <string>PLN</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_10">
-             <property name="text">
-              <string>Kapitał końcowy</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_9">
-             <property name="text">
-              <string>Kapitał początkowy</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="label_13">
-             <property name="text">
-              <string>0</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="label_12">
-             <property name="text">
-              <string>0</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="2,1">
          <item>
           <widget class="QFrame" name="pieChartView">
            <property name="minimumSize">
             <size>
              <width>181</width>
              <height>131</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>361</width>
-             <height>261</height>
             </size>
            </property>
            <property name="sizeIncrement">
@@ -340,10 +304,141 @@
            <layout class="QGridLayout" name="gridLayout_3"/>
           </widget>
          </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_4" columnstretch="3,1,2,3,1,2">
+           <property name="leftMargin">
+            <number>9</number>
+           </property>
+           <property name="topMargin">
+            <number>9</number>
+           </property>
+           <property name="rightMargin">
+            <number>9</number>
+           </property>
+           <property name="bottomMargin">
+            <number>9</number>
+           </property>
+           <item row="2" column="1">
+            <widget class="QLabel" name="label_kapitalRoz">
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QLabel" name="label_kapitalKon">
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>Zysk</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="4">
+            <widget class="QLabel" name="label_kapitalPodatek">
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Kapitał początkowy</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QLabel" name="label_16">
+             <property name="text">
+              <string>PLN</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_15">
+             <property name="text">
+              <string>PLN</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="5">
+            <widget class="QLabel" name="label_20">
+             <property name="text">
+              <string>PLN</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Kapitał końcowy</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3">
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>Podatek</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_kapitalPocz">
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_17">
+             <property name="text">
+              <string>PLN</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
         </layout>
        </item>
        <item>
-        <widget class="QListView" name="listView"/>
+        <widget class="QTableWidget" name="tableWidget">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -362,11 +457,14 @@
   </widget>
  </widget>
  <tabstops>
-  <tabstop>lineEdit_1</tabstop>
-  <tabstop>spinBox_1</tabstop>
-  <tabstop>spinBox_2</tabstop>
-  <tabstop>lineEdit_2</tabstop>
+  <tabstop>lineEdit_kapitalPocz</tabstop>
+  <tabstop>spinBox_okresTrwania</tabstop>
+  <tabstop>comboBoxPeriod</tabstop>
+  <tabstop>spinBox_liczbaKap</tabstop>
+  <tabstop>lineEdit_stopaProc</tabstop>
+  <tabstop>comboBoxMonths</tabstop>
   <tabstop>buttonCalculate</tabstop>
+  <tabstop>tableWidget</tabstop>
  </tabstops>
  <resources/>
  <connections/>
