@@ -170,6 +170,8 @@ void MainWindow::on_buttonCalculate_clicked()
         linePlot->setAxisTitle(QwtPlot::xBottom, "Czas");
         linePlot->setAxisTitle(QwtPlot::yLeft, "Kapitał");
 
+        linePlot->setAxisScale(QwtPlot::xBottom, 0, kapital->czasTrwania, 1);
+
         linePlotFrame->layout()->addWidget(linePlot);
 
         QwtPlotGrid* linePlotGrid = new QwtPlotGrid();
@@ -188,10 +190,10 @@ void MainWindow::on_buttonCalculate_clicked()
         linePlotCurve->setSamples(lineSeries);
         linePlotCurve->attach(linePlot);
     } else {
+        linePlot->setAxisScale(QwtPlot::xBottom, 0, kapital->czasTrwania, 1);
         linePlotCurve->setSamples(lineSeries);
         linePlot->replot();
     }
-    linePlot->setAxisScale(QwtPlot::xBottom, 0, kapital->liczbaKapitalizacji, 1);
 
     // pie chart of profits
     // check if pie chart exists, if not create one
